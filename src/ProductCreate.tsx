@@ -2,6 +2,13 @@ import React from "react";
 import { AxiosError } from "axios";
 import { createProduct } from "./product.service";
 import { Product } from "./types";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  postProduct,
+  ProductPageState,
+  showForm as showFormAction,
+  updateNewProduct,
+} from "./product.redux";
 
 export function ProductCreate(props: {
   onError: (error: string) => void;
@@ -27,7 +34,7 @@ export function ProductCreate(props: {
       {showForm && (
         <>
           <h1>Product Create</h1>
-          <form onSubmit={onSubmit}>
+          <form>
             <label htmlFor="code">Code</label>
             <input
               id="code"
@@ -46,7 +53,57 @@ export function ProductCreate(props: {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
-            <button type="submit">Submit</button>
+            <button type="button" onClick={onSubmit}>
+              Submit
+            </button>
+          </form>
+        </>
+      )}
+    </div>
+  );
+}
+
+export function ReduxProductCreate() {
+  const showForm = useSelector((state: ProductPageState) => state.showForm);
+  const newProduct = useSelector((state: ProductPageState) => state.newProduct);
+  const dispatch = useDispatch();
+  return (
+    <div className="ProductCreate">
+      <button onClick={() => dispatch(showFormAction())}>Add Product</button>
+      {showForm && (
+        <>
+          <h1>Product Create</h1>
+          <form>
+            <label htmlFor="code">Code</label>
+            <input
+              id="code"
+              value={newProduct.code}
+              onChange={(e) =>
+                dispatch(updateNewProduct({ code: e.target.value }))
+              }
+            ></input>
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              value={newProduct.name}
+              onChange={(e) =>
+                dispatch(updateNewProduct({ name: e.target.value }))
+              }
+            ></input>
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              value={newProduct.description}
+              onChange={(e) =>
+                dispatch(updateNewProduct({ description: e.target.value }))
+              }
+            ></textarea>
+            <button
+              type="button"
+              onClick={() => dispatch(postProduct(newProduct))}
+            >
+              Submit
+            </button>
           </form>
         </>
       )}

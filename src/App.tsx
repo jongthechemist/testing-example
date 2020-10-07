@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
-import { ProductCreate } from './ProductCreate';
-import { ProductList } from './ProductList';
+import { ProductCreate, ReduxProductCreate } from './ProductCreate';
+import { ProductList, ReduxProductList } from './ProductList';
+import { ProductProvider } from './store';
 import { Product } from './types';
 
 function App() {
@@ -15,6 +16,15 @@ function App() {
       <ProductCreate onError={setError} onSuccess={setNewProduct}/>
     </div>
   );
+}
+
+function ReduxApp() {
+  return (
+    <ProductProvider>
+      <ReduxProductList/>
+      <ReduxProductCreate/>
+    </ProductProvider>
+  )
 }
 
 export default App;
